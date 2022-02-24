@@ -26,10 +26,15 @@ class WordListFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var recyclerView: RecyclerView
     private var isLinearLayoutManager = true
+    private lateinit var letterId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
+        arguments?.let {
+            letterId = it.getString(LETTER).toString()
+        }
     }
 
     override fun onCreateView(
@@ -43,12 +48,6 @@ class WordListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recyclerView = binding.recyclerView
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = WordAdapter(activity?.intent?.extras?.getString(LETTER).toString(), requireContext())
-
-        recyclerView.addItemDecoration(
-            DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
-        )
         chooseLayout()
     }
 
@@ -68,11 +67,12 @@ class WordListFragment : Fragment() {
         when (isLinearLayoutManager) {
             true -> {
                 recyclerView.layoutManager = LinearLayoutManager(context)
-                recyclerView.adapter = LetterAdapter()
+                recyclerView.adapter = WordAdapter(letterId, requireContext())
             }
             false -> {
-                recyclerView.layoutManager = GridLayoutManager(context, 4)
-                recyclerView.adapter = LetterAdapter()
+                recyclerView.layoutManager = GridLayoutManager(context, 3)
+                recyclerView.adapter = WordAdapter(letterId, requireContext())
+
             }
         }
     }
